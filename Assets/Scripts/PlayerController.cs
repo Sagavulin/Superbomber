@@ -22,6 +22,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float destroyTime = 2f;
 
     private bool isPaused = false;
+    private bool isDead = false;
     
     private void Start()
     {
@@ -76,17 +77,27 @@ public class PlayerController : MonoBehaviour
 
     public void Die()
     {
-        // Player has died and no control
-        hasControl = false;
+        if (!isDead)
+        {
+            isDead = true;
+            
+            // Player has died and no control
+            hasControl = false;
         
-        // Destroy the player a set delay time
-        Destroy(gameObject, destroyTime);
-        
-        // Tell the GameManager that the player has died
-        m_GameManager.PlayerDied();
+            // Removes player velocity
+            m_Rigidbody.velocity = Vector3.zero;
 
-        //Play death animation
-        // Remove the player from the scene
+            m_Rigidbody.isKinematic = true;
+            
+            // Destroy the player a set delay time
+            Destroy(gameObject, destroyTime);
+        
+            // Tell the GameManager that the player has died
+            m_GameManager.PlayerDied();
+
+            //Play death animation
+            // Remove the player from the scene
+        }
     }
 
     private void OnCollisionEnter(Collision collision)

@@ -76,11 +76,27 @@ public class EnemyController : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player")
         {
-            isMoving = false;
-            Debug.Log("Enemy Hit player!");
+            //isMoving = false;
         }
 
         if (collision.gameObject.tag == "Bomb")
+        {
+            isMoving = false;
+            if (movingForward)
+            {
+                Invoke("DecreaseDestination", Random.Range(enemyHitBombDelayMin, enemyHitBombDelayMax));
+            }
+            else
+            {
+                Invoke("IncreaseDestination", Random.Range(enemyHitBombDelayMin, enemyHitBombDelayMax));
+            }
+            movingForward = !movingForward;
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Bomb")
         {
             isMoving = false;
             if (movingForward)
