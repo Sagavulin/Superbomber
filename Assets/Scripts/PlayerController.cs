@@ -68,8 +68,19 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space) && currentBombsPlaced < maxBombs)
         {
+            Vector3 center = new Vector3(Mathf.Round(transform.position.x), 0f, Mathf.Round(transform.position.z));
+
+            Collider[] hitColliders = Physics.OverlapSphere(center, 0.5f);
+            foreach (Collider hitCollider in hitColliders)
+            {
+                if (hitCollider.tag == "Bomb")
+                {
+                    return;
+                }
+            }
+            
             GameObject bomb = Instantiate(bombPrefab, transform.position, Quaternion.identity);
-            bomb.transform.position = new Vector3(Mathf.Round(transform.position.x), 0f, Mathf.Round(transform.position.z));
+            bomb.transform.position = center;
             currentBombsPlaced++;
             m_GameManager.UpdateBombs();
         }
