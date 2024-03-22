@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7145438184464777440}
   - component: {fileID: 7145438184464777443}
   - component: {fileID: 7145438184464777442}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Enemy1
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -118,6 +118,7 @@ MonoBehaviour:
   enemyDelayMax: 3
   enemyHitBombDelayMin: 0.5
   enemyHitBombDelayMax: 3
+  scoreValue: 50
 --- !u!54 &7145438184464777442
 Rigidbody:
   m_ObjectHideFlags: 0

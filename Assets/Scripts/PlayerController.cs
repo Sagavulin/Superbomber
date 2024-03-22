@@ -23,6 +23,8 @@ public class PlayerController : MonoBehaviour
 
     private bool isPaused = false;
     private bool isDead = false;
+
+    [SerializeField] LayerMask whatAreBombLayers;
     
     private void Start()
     {
@@ -70,13 +72,11 @@ public class PlayerController : MonoBehaviour
         {
             Vector3 center = new Vector3(Mathf.Round(transform.position.x), 0f, Mathf.Round(transform.position.z));
 
-            Collider[] hitColliders = Physics.OverlapSphere(center, 0.5f);
-            foreach (Collider hitCollider in hitColliders)
+            // Create an overlap sphere where the new bomb will be placed to check if there's already a bomb there
+            Collider[] hitColliders = Physics.OverlapSphere(center, 0.5f, whatAreBombLayers);
+            if (hitColliders.Length > 0)
             {
-                if (hitCollider.tag == "Bomb")
-                {
-                    return;
-                }
+                return;
             }
             
             GameObject bomb = Instantiate(bombPrefab, transform.position, Quaternion.identity);

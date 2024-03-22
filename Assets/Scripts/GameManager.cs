@@ -8,8 +8,8 @@ public class GameManager : MonoBehaviour
 {
     private int lives = 3;
     private int currentScore = 0;
-    private int maxBombs = 3;
-    private int explodeRange = 3;
+    private int maxBombs = 1;
+    private int explodeRange = 1;
     private bool isPaused = false;
     [SerializeField] private GameObject pausePanel;
     [SerializeField] private GameObject gameOverPanel;
@@ -96,6 +96,11 @@ public class GameManager : MonoBehaviour
         return explodeRange;
     }
 
+    public void IncreaseExplodeRange()
+    {
+        explodeRange++;
+    }
+
     public void PauseButton()
     {
         if (isPaused)
@@ -151,5 +156,11 @@ public class GameManager : MonoBehaviour
     {
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
         SceneManager.LoadScene(currentSceneIndex + 1);
+    }
+
+    public void IncreaseMaxBombs()
+    {
+        maxBombs++;
+        currentPlayer.InitializePlayer(maxBombs);
     }
 }
