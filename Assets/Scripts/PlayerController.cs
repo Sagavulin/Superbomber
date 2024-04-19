@@ -5,9 +5,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 { 
-    [SerializeField] private float xMoveSpeed;
-    [SerializeField] private float yMoveSpeed;
-    [SerializeField] private float zMoveSpeed;
+    float moveSpeed = 0;
 
     private Rigidbody m_Rigidbody;
 
@@ -48,19 +46,19 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKey(KeyCode.W))
         {
-            newVelocity += new Vector3(0f, 0f, zMoveSpeed);
+            newVelocity += new Vector3(0f, 0f, moveSpeed);
         }
         if (Input.GetKey(KeyCode.S))
         {
-            newVelocity += new Vector3(0f, 0f, -zMoveSpeed);
+            newVelocity += new Vector3(0f, 0f, -moveSpeed);
         }
         if (Input.GetKey(KeyCode.A))
         {
-            newVelocity += new Vector3(-xMoveSpeed, 0f, 0f);
+            newVelocity += new Vector3(-moveSpeed, 0f, 0f);
         }
         if (Input.GetKey(KeyCode.D))
         {
-            newVelocity += new Vector3(xMoveSpeed, 0f, 0f);
+            newVelocity += new Vector3(moveSpeed, 0f, 0f);
         }
 
         m_Rigidbody.velocity = newVelocity;
@@ -82,7 +80,7 @@ public class PlayerController : MonoBehaviour
             GameObject bomb = Instantiate(bombPrefab, transform.position, Quaternion.identity);
             bomb.transform.position = center;
             currentBombsPlaced++;
-            m_GameManager.UpdateBombs();
+            m_GameManager.UpdateBombsText();
         }
     }
 
@@ -131,9 +129,10 @@ public class PlayerController : MonoBehaviour
     }
 
     // Called when the player is spawned and sets its starting values
-    public void InitializePlayer(int bombs)
+    public void InitializePlayer(int bombs, float speed)
     {
         maxBombs = bombs;
+        moveSpeed = speed;
     }
 
     public void SetPaused(bool state)

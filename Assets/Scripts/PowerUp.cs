@@ -18,22 +18,26 @@ public class PowerUp : MonoBehaviour
     {
         if (other.gameObject.tag == "Player")
         {
-            // Used with bomb powerup
-            if (powerUpType == PowerUps.MaxBombs)
+            switch (powerUpType)
             {
-                FindObjectOfType<GameManager>().IncreaseMaxBombs();
-                Destroy(gameObject);
-            }
-            // Used with range powerup
-            else if (powerUpType == PowerUps.Range)
-            {
-                FindObjectOfType<GameManager>().IncreaseExplodeRange();
-                Destroy(gameObject);
-            }
-            // Used with speed powerup
-            else if (powerUpType == PowerUps.Speed)
-            {
-                Debug.Log("Pickup Speed Powerup");
+                case PowerUps.MaxBombs:
+                {
+                    FindObjectOfType<GameManager>().IncreaseMaxBombs();
+                    Destroy(gameObject);
+                    break;
+                }
+                case PowerUps.Range:
+                {
+                    FindObjectOfType<GameManager>().IncreaseExplodeRange();
+                    Destroy(gameObject);
+                    break;
+                }
+                case PowerUps.Speed:
+                {
+                    FindObjectOfType<GameManager>().IncreaseSpeed();
+                    Destroy(gameObject);
+                    break;
+                }
             }
         }
     }
