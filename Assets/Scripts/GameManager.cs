@@ -14,6 +14,10 @@ public class GameManager : MonoBehaviour
     private bool isPaused = false;
     private float moveSpeed = 4f;
     private float speedIncrease = 0.4f;
+
+    [SerializeField] private int bombLimit = 6;
+    [SerializeField] private int explodeLimit = 5;
+    [SerializeField] private float speedLimit = 6.0f;
     
     [SerializeField] private GameObject pausePanel;
     [SerializeField] private GameObject gameOverPanel;
@@ -102,17 +106,6 @@ public class GameManager : MonoBehaviour
         speedText.text = "Speed: " + moveSpeed.ToString();
     }
     
-    public int GetExplodeRange()
-    {
-        return explodeRange;
-    }
-
-    public void IncreaseExplodeRange()
-    {
-        explodeRange++;
-        UpdateExplodeRangeText();
-    }
-
     public void PauseButton()
     {
         if (isPaused)
@@ -173,6 +166,7 @@ public class GameManager : MonoBehaviour
     public void IncreaseMaxBombs()
     {
         maxBombs++;
+        maxBombs = Mathf.Clamp(maxBombs, 1, bombLimit);
         UpdateBombsText();
         currentPlayer.InitializePlayer(maxBombs, moveSpeed);
     }
@@ -180,7 +174,20 @@ public class GameManager : MonoBehaviour
     public void IncreaseSpeed()
     {
         moveSpeed += speedIncrease;
+        moveSpeed = Mathf.Clamp(moveSpeed, 4f, speedLimit);
         UpdateSpeedText();
         currentPlayer.InitializePlayer(maxBombs, moveSpeed);
+    }
+    
+    public int GetExplodeRange()
+    {
+        return explodeRange;
+    }
+
+    public void IncreaseExplodeRange()
+    {
+        explodeRange++;
+        explodeRange = Mathf.Clamp(explodeRange, 1, explodeLimit);
+        UpdateExplodeRangeText();
     }
 }
