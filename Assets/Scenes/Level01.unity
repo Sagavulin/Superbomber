@@ -12128,6 +12128,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Ground
       objectReference: {fileID: 0}
+    - target: {fileID: 3584543508280310552, guid: 5beae78926953c64eaa4cb91bae11a76, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 8a2e9da87aac1064bad519a543254af3, type: 2}
     - target: {fileID: 9210255032840212244, guid: 5beae78926953c64eaa4cb91bae11a76, type: 3}
       propertyPath: m_RootOrder
       value: 1
