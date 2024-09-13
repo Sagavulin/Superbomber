@@ -17,16 +17,19 @@ public class PlayerController : MonoBehaviour
     private int currentBombsPlaced = 0;
 
     private bool hasControl = true;
-    [SerializeField] private float destroyTime = 2f;
+    [SerializeField] private float destroyTime = 2.0f;
 
     private bool isPaused = false;
     private bool isDead = false;
 
     [SerializeField] LayerMask whatAreBombLayers;
+
+    private Animator m_Animator;
     
     private void Start()
     {
         m_Rigidbody = GetComponent<Rigidbody>();
+        m_Animator = GetComponent<Animator>();
         m_GameManager = FindObjectOfType<GameManager>();
     }
 
@@ -36,10 +39,20 @@ public class PlayerController : MonoBehaviour
         if (hasControl && !isPaused)
         {
             Movement();
+			Rotation();
+            UpdateAnimator();
             PlaceBomb();    
         }
     }
 
+    private void Rotation()
+    {
+	    if (m_Rigidbody.velocity != Vector3.zero)
+	    {
+		    transform.forward = m_Rigidbody.velocity;
+	    }
+    }
+    
     private void Movement()
     {
         Vector3 newVelocity = new Vector3();
@@ -105,7 +118,7 @@ public class PlayerController : MonoBehaviour
             m_GameManager.PlayerDied();
 
             //Play death animation
-            // Remove the player from the scene
+            m_Animator.SetBool("isDead", true);
         }
     }
 
@@ -138,5 +151,24 @@ public class PlayerController : MonoBehaviour
     public void SetPaused(bool state)
     {
         isPaused = state;
+    }
+
+    private void UpdateAnimator()
+    {
+	    // If player has no velocity play idle animation
+	    if (m_Rigidbody.velocity == Vector3.zero)
+	    {
+		    m_Animator.SetBool("isWalking", false);
+	    }
+	    else
+	    {
+		    m_Animator.SetBool("isWalking", true);
+	    }
+    }
+
+    public void PlayVictory()
+    {
+	    m_Animator.SetBool("isVictory", true);
+	    hasControl = false;
     }
 }

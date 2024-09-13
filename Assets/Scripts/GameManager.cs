@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,17 +8,17 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     // PLAYER STATS
-    private int lives = 3;
     private int currentScore = 0;
+    private int lives = 3;
     private int maxBombs = 1;
     private int explodeRange = 1;
     private bool isPaused = false;
     private float moveSpeed = 4f;
-    private float speedIncrease = 0.4f;
 
     [SerializeField] private int bombLimit = 6;
     [SerializeField] private int explodeLimit = 5;
     [SerializeField] private float speedLimit = 6.0f;
+    private float speedIncrease = 0.4f;
     
     [SerializeField] private GameObject pausePanel;
     [SerializeField] private GameObject gameOverPanel;
@@ -40,7 +41,19 @@ public class GameManager : MonoBehaviour
     private int enemiesThisLevel = 0;
 
     [SerializeField] private bool isLastLevel = false;
-    
+
+	// Const string variables for our PlayerPrefs Keys
+	private const string CurrentScoreKey = "CurrentScore";
+	private const string LivesKey = "Lives";
+	private const string MaxBombsKey = "MaxBombs";
+	private const string ExplodeRangeKey = "ExplodeRange";
+	private const string MoveSpeedKey = "MoveSpeed";
+
+    private void Awake()
+    {
+	    LoadPlayerPrefs();
+    }
+
     void Start()
     {
         UpdateScore(0);
@@ -57,7 +70,6 @@ public class GameManager : MonoBehaviour
     {
         if (lives > 1)
         {
-            Debug.Log("GameManager: Player has died.");
             lives--;
             
             // Spawn new player
@@ -65,7 +77,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            GameOver();
+            Invoke("GameOver", 3.0f);
             lives = 0;
             UpdateLives();
         }
@@ -129,6 +141,11 @@ public class GameManager : MonoBehaviour
         gameOverPanel.SetActive(true);
     }
 
+    private void DisplayWinPanel()
+    {
+	    winGamePanel.SetActive(true);
+    }
+
     public void LoadMainMenu()
     {
         SceneManager.LoadScene("MainMenu");
@@ -146,13 +163,20 @@ public class GameManager : MonoBehaviour
 
         if (enemiesThisLevel <= 0)
         {
-            if (!isLastLevel)
+            if (isLastLevel)
             {
-                LoadNextLevel();
+	            // Tell the player to play his victory animation
+	            currentPlayer.PlayVictory();
+	            Invoke("DisplayWinPanel", 3.0f);
             }
             else
             {
-                winGamePanel.SetActive(true);
+	            // Tell the player to play his victory animation
+	            currentPlayer.PlayVictory();
+	            // Save all of the player data PlayerPrefs so it can be loaded in the next level
+	            SavePlayerData();
+	            
+	            Invoke("LoadNextLevel", 3.0f);
             }
         }
     }
@@ -189,5 +213,38 @@ public class GameManager : MonoBehaviour
         explodeRange++;
         explodeRange = Mathf.Clamp(explodeRange, 1, explodeLimit);
         UpdateExplodeRangeText();
+    }
+
+    private void SavePlayerData()
+    {
+	    PlayerPrefs.SetInt(CurrentScoreKey, currentScore);
+	    PlayerPrefs.SetInt(LivesKey, lives);
+	    PlayerPrefs.SetInt(MaxBombsKey, maxBombs);
+	    PlayerPrefs.SetInt(ExplodeRangeKey, explodeRange);
+	    PlayerPrefs.SetFloat(MoveSpeedKey, moveSpeed);
+    }
+
+    private void LoadPlayerPrefs()
+    {
+	    if (PlayerPrefs.HasKey(CurrentScoreKey))
+	    {
+		    currentScore = PlayerPrefs.GetInt(CurrentScoreKey);
+	    }
+	    if (PlayerPrefs.HasKey(LivesKey))
+	    {
+		    lives = PlayerPrefs.GetInt(LivesKey);
+	    }
+	    if (PlayerPrefs.HasKey(MaxBombsKey))
+	    {
+		    maxBombs = PlayerPrefs.GetInt(MaxBombsKey);
+	    }
+	    if (PlayerPrefs.HasKey(ExplodeRangeKey))
+	    {
+		    explodeRange = PlayerPrefs.GetInt(ExplodeRangeKey);
+	    }
+	    if (PlayerPrefs.HasKey(MoveSpeedKey))
+	    {
+		    moveSpeed = PlayerPrefs.GetFloat(MoveSpeedKey);
+	    }
     }
 }

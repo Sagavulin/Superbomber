@@ -10,6 +10,7 @@ TagManager:
   - Explosion
   - Breakable
   - GameManager
+  - PowerUp
   layers:
   - Default
   - TransparentFX

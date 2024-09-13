@@ -14,7 +14,6 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private float enemyHitBombDelayMax = 3f;
     [SerializeField] private int scoreValue = 50;
     
-
     private Rigidbody m_Rigidbody;
 
     private bool isMoving = true;
@@ -22,10 +21,14 @@ public class EnemyController : MonoBehaviour
     private int wayPointDestination = 0;
 
     private bool isDead = false;
+
+    private Animator m_Animator;
+
     private void Start()
     {
         m_Rigidbody = GetComponent<Rigidbody>();
-
+        m_Animator = GetComponent<Animator>();
+        
         if (target.Length == 0)
         {
             isMoving = false;
@@ -33,11 +36,19 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+	    UpdateAnimator();
+    }
+
     void FixedUpdate()
     {
-        if (isMoving)
+	    if (isDead) { return; }
+	    
+	    if (isMoving)
         {
             m_Rigidbody.MovePosition(Vector3.MoveTowards(transform.position, target[wayPointDestination].position, Time.deltaTime * moveSpeed));
+            transform.LookAt(target[wayPointDestination].position);
             if (Vector3.Distance(transform.position, target[wayPointDestination].position) < 0.1f)
             {
                 isMoving = false;
@@ -111,6 +122,38 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    private void OnCollisionStay(Collision collision)
+    {
+	    if (collision.gameObject.tag == "Bomb")
+	    {
+		    isMoving = false;
+	    }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+	    if (other.gameObject.tag == "Bomb")
+	    {
+		    isMoving = false;
+	    }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+	    if (collision.gameObject.tag == "Bomb")
+	    {
+		    isMoving = true;
+	    }
+    }
+    
+    private void OnTriggerExit(Collider other)
+    {
+	    if (other.gameObject.tag == "Bomb")
+	    {
+		    isMoving = true;
+	    }
+    }
+
     public void Die()
     {
         if (!isDead)
@@ -119,7 +162,9 @@ public class EnemyController : MonoBehaviour
             GameManager myGameManager = FindObjectOfType<GameManager>();
             myGameManager.UpdateScore(scoreValue);
             myGameManager.EnemyHasDied();
-            Destroy(gameObject);    
+            Destroy(gameObject, 3.0f);
+            GetComponent<Collider>().enabled = false;
+            m_Animator.SetBool("isDead", true);
         }
         
     }
@@ -140,5 +185,10 @@ public class EnemyController : MonoBehaviour
             wayPointDestination--;
         }
         isMoving = true;
+    }
+
+    private void UpdateAnimator()
+    {
+	    m_Animator.SetBool("isWalking", isMoving);
     }
 }

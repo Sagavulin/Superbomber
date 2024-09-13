@@ -63,8 +63,17 @@ public class Explosion : MonoBehaviour
         if (other.gameObject.tag == "Breakable")
         {
             FindObjectOfType<PowerUpSpawner>().BlockDestroyed(other.transform.position);
-            Destroy(other.gameObject);
+            
+            // Play destroy block animation
+            other.gameObject.GetComponent<Animator>().SetTrigger("isDestroyed");
+            Destroy(other.gameObject, .5f);
             Destroy(gameObject);
+        }
+
+        if (other.gameObject.tag == "PowerUp")
+        {
+	        Destroy(other.gameObject);
+	        Destroy(gameObject);
         }
     }
 }
