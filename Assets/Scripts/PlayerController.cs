@@ -25,12 +25,17 @@ public class PlayerController : MonoBehaviour
     [SerializeField] LayerMask whatAreBombLayers;
 
     private Animator m_Animator;
+    private AudioSource m_AudioSource;
+
+    [SerializeField] private AudioClip playerDeathSound;
+    [SerializeField] private AudioClip powerupPickup;
     
     private void Start()
     {
         m_Rigidbody = GetComponent<Rigidbody>();
         m_Animator = GetComponent<Animator>();
         m_GameManager = FindObjectOfType<GameManager>();
+        m_AudioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -103,6 +108,9 @@ public class PlayerController : MonoBehaviour
         {
             isDead = true;
             
+            // Play death sound
+            m_AudioSource.PlayOneShot(playerDeathSound, 1f);
+            
             // Player has died and no control
             hasControl = false;
         
@@ -170,5 +178,10 @@ public class PlayerController : MonoBehaviour
     {
 	    m_Animator.SetBool("isVictory", true);
 	    hasControl = false;
+    }
+
+    public void PlayPowerupPickUpAudio()
+    {
+	    m_AudioSource.PlayOneShot(powerupPickup, 1f);
     }
 }

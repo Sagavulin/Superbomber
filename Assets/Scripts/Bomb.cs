@@ -13,6 +13,11 @@ public class Bomb : MonoBehaviour
     [SerializeField] private GameObject explosionPrefab;
     [SerializeField] private float explodeSpeed = 200f;
     private int explodeRange = 1;
+
+    [SerializeField] private AudioClip bombExplodeAudio;
+
+    private bool hasExploded = false;
+    [SerializeField] private GameObject bombModel;
     
     void Start()
     {
@@ -24,7 +29,7 @@ public class Bomb : MonoBehaviour
     {
         explosionTimer += Time.deltaTime;
         
-        if (explosionTimer >= explosionDelay)
+        if (explosionTimer >= explosionDelay && !hasExploded)
         {
             Explode();
         }
@@ -54,6 +59,14 @@ public class Bomb : MonoBehaviour
 
         player.BombExploded();
 
-        Destroy(gameObject);
+        GetComponent<AudioSource>().PlayOneShot(bombExplodeAudio);
+        
+        // Destroy collider on the bomb and turn off the bomb model
+        Destroy(GetComponent<Collider>());
+        bombModel.SetActive(false);
+
+        Destroy(gameObject, 1.0f);
+        
+        hasExploded = true;
     }
 }

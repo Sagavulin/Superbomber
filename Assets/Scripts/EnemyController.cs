@@ -15,6 +15,7 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private int scoreValue = 50;
     
     private Rigidbody m_Rigidbody;
+    private AudioSource m_AudioSource;
 
     private bool isMoving = true;
     private bool movingForward = true;
@@ -28,6 +29,7 @@ public class EnemyController : MonoBehaviour
     {
         m_Rigidbody = GetComponent<Rigidbody>();
         m_Animator = GetComponent<Animator>();
+        m_AudioSource = GetComponent<AudioSource>();
         
         if (target.Length == 0)
         {
@@ -162,6 +164,7 @@ public class EnemyController : MonoBehaviour
             GameManager myGameManager = FindObjectOfType<GameManager>();
             myGameManager.UpdateScore(scoreValue);
             myGameManager.EnemyHasDied();
+            m_AudioSource.Play();
             Destroy(gameObject, 3.0f);
             GetComponent<Collider>().enabled = false;
             m_Animator.SetBool("isDead", true);
