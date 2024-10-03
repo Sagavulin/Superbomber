@@ -60,31 +60,16 @@ public class PlayerController : MonoBehaviour
     
     private void Movement()
     {
-        Vector3 newVelocity = new Vector3();
-
-        if (Input.GetKey(KeyCode.W))
-        {
-            newVelocity += new Vector3(0f, 0f, moveSpeed);
-        }
-        if (Input.GetKey(KeyCode.S))
-        {
-            newVelocity += new Vector3(0f, 0f, -moveSpeed);
-        }
-        if (Input.GetKey(KeyCode.A))
-        {
-            newVelocity += new Vector3(-moveSpeed, 0f, 0f);
-        }
-        if (Input.GetKey(KeyCode.D))
-        {
-            newVelocity += new Vector3(moveSpeed, 0f, 0f);
-        }
-
+        float x = Input.GetAxisRaw("Horizontal");
+        float z = Input.GetAxisRaw("Vertical");
+        
+        Vector3 newVelocity = new Vector3(x * moveSpeed, 0f, z * moveSpeed);
         m_Rigidbody.velocity = newVelocity;
     }
 
     private void PlaceBomb()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && currentBombsPlaced < maxBombs)
+        if (Input.GetButtonDown("Fire1") && currentBombsPlaced < maxBombs)
         {
             Vector3 center = new Vector3(Mathf.Round(transform.position.x), 0f, Mathf.Round(transform.position.z));
 
