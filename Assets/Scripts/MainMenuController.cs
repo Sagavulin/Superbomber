@@ -11,4 +11,9 @@ public class MainMenuController : MonoBehaviour
 	    PlayerPrefs.DeleteAll();
         SceneManager.LoadScene("Level01");
     }
+
+    public void QuitGame()
+    {
+		Application.Quit();
+    }
 }
