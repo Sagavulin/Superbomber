@@ -35,11 +35,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] private CameraController myCamera;
 
     [SerializeField] private TextMeshProUGUI scoreText;
-    [SerializeField] private Text livesText;
-    [SerializeField] private Text bombsText;
-    [SerializeField] private Text explodeRangeText;
-    [SerializeField] private Text speedText;
-
+    [SerializeField] private TextMeshProUGUI livesText;
+    [SerializeField] private TextMeshProUGUI bombsText;
+    [SerializeField] private TextMeshProUGUI explodeRangeText;
+    [SerializeField] private TextMeshProUGUI speedText;
+    [SerializeField] private TextMeshProUGUI levelNameText;
+    
     private int enemiesThisLevel = 0;
 
     [SerializeField] private bool isLastLevel = false;
@@ -64,6 +65,7 @@ public class GameManager : MonoBehaviour
         UpdateExplodeRangeText();
         UpdateSpeedText();
         SpawnPlayer();
+        UpdateLevelName();
         
         enemiesThisLevel = GetEnemyCount();
     }
@@ -102,22 +104,27 @@ public class GameManager : MonoBehaviour
 
     private void UpdateLives()
     {
-        livesText.text = "Lives: " + lives.ToString("D2");
+        livesText.text = lives.ToString("D2");
     }
 
     public void UpdateBombsText()
     {
-        bombsText.text = "Bombs: " + maxBombs.ToString("D2");
+        bombsText.text = maxBombs.ToString("D2");
     }
 
     private void UpdateExplodeRangeText()
     {
-        explodeRangeText.text = "Range: " + explodeRange.ToString("D2");
+        explodeRangeText.text = explodeRange.ToString("D2");
     }
     
     private void UpdateSpeedText()
     {
-        speedText.text = "Speed: " + speedCounter.ToString("D2");
+        speedText.text = speedCounter.ToString("D2");
+    }
+
+    private void UpdateLevelName()
+    {
+	    levelNameText.text = SceneManager.GetActiveScene().name;
     }
     
     public void PauseButton()
@@ -202,7 +209,6 @@ public class GameManager : MonoBehaviour
         if (speedCounter < speedLimit)
         {
             moveSpeed += speedIncrease;
-            //moveSpeed = Mathf.Clamp(moveSpeed, 4f, speedLimit);
             speedCounter++;
             UpdateSpeedText();
             currentPlayer.InitializePlayer(maxBombs, moveSpeed);
