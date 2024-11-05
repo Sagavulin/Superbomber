@@ -39,41 +39,45 @@ public class Explosion : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "Block")
+        switch (other.gameObject.tag)
         {
-            Destroy(gameObject);
-        }
-        
-        if (other.gameObject.tag == "Bomb")
-        {
-            other.gameObject.GetComponent<Bomb>().Explode();
-            Destroy(gameObject);
-        }
-        
-        if (other.gameObject.tag == "Player")
-        {
-            other.gameObject.GetComponent<PlayerController>().Die();
-        }
-        
-        if (other.gameObject.tag == "Enemy")
-        {
-            other.gameObject.GetComponent<EnemyController>().Die();
-        }
-
-        if (other.gameObject.tag == "Breakable")
-        {
-            FindObjectOfType<PowerUpSpawner>().BlockDestroyed(other.transform.position);
+            case "Block":
+            {
+                Destroy(gameObject);
+                break;
+            }
+            case "Bomb":
+            {
+                other.gameObject.GetComponent<Bomb>().Explode();
+                Destroy(gameObject);
+                break;
+            }
+            case "Player":
+            {
+                other.gameObject.GetComponent<PlayerController>().Die();
+                break;
+            }
+            case "Enemy":
+            {
+                other.gameObject.GetComponent<EnemyController>().Die();
+                break;
+            }
+            case "Breakable":
+            {
+                FindObjectOfType<PowerUpSpawner>().BlockDestroyed(other.transform.position);
             
-            // Play destroy block animation
-            other.gameObject.GetComponent<Animator>().SetTrigger("isDestroyed");
-            Destroy(other.gameObject, .5f);
-            Destroy(gameObject);
-        }
-
-        if (other.gameObject.tag == "PowerUp")
-        {
-	        Destroy(other.gameObject);
-	        Destroy(gameObject);
+                // Play destroy block animation
+                other.gameObject.GetComponent<Animator>().SetTrigger("isDestroyed");
+                Destroy(other.gameObject, .5f);
+                Destroy(gameObject);
+                break;
+            }
+            case "PowerUp":
+            {
+                Destroy(other.gameObject);
+                Destroy(gameObject);
+                break;
+            }
         }
     }
 }

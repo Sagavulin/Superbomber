@@ -53,57 +53,17 @@ public class EnemyController : MonoBehaviour
             transform.LookAt(target[wayPointDestination].position);
             if (Vector3.Distance(transform.position, target[wayPointDestination].position) < 0.1f)
             {
-                isMoving = false;
-                if (movingForward)
-                {
-                    if (wayPointDestination >= target.Length - 1)
-                    {
-                        movingForward = false;
-                        Invoke("DecreaseDestination", Random.Range(enemyDelayMin, enemyDelayMax));
-                    }
-                    // If enemy is moving forward AND has not reached the last waypoint in the array
-                    else
-                    {
-                        Invoke("IncreaseDestination", Random.Range(enemyDelayMin, enemyDelayMax));
-                    }
-                }
-                // Enemy is moving backwards
-                else
-                {
-                    if (wayPointDestination <= 0)
-                    {
-                        movingForward = true;
-                        Invoke("IncreaseDestination", Random.Range(enemyDelayMin, enemyDelayMax));
-                    }
-                    // If enemy is moving backward AND has not reached the first waypoint in the array
-                    else
-                    {
-                        Invoke("DecreaseDestination", Random.Range(enemyDelayMin, enemyDelayMax));
-                    }
-                }
+                PickNextWayPoint();
             }
         }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Player")
-        {
-            //isMoving = false;
-        }
-
         if (collision.gameObject.tag == "Bomb")
         {
-            isMoving = false;
-            if (movingForward)
-            {
-                Invoke("DecreaseDestination", Random.Range(enemyHitBombDelayMin, enemyHitBombDelayMax));
-            }
-            else
-            {
-                Invoke("IncreaseDestination", Random.Range(enemyHitBombDelayMin, enemyHitBombDelayMax));
-            }
             movingForward = !movingForward;
+            PickNextWayPoint();
         }
     }
 
@@ -111,49 +71,9 @@ public class EnemyController : MonoBehaviour
     {
         if (other.gameObject.tag == "Bomb")
         {
-            isMoving = false;
-            if (movingForward)
-            {
-                Invoke("DecreaseDestination", Random.Range(enemyHitBombDelayMin, enemyHitBombDelayMax));
-            }
-            else
-            {
-                Invoke("IncreaseDestination", Random.Range(enemyHitBombDelayMin, enemyHitBombDelayMax));
-            }
             movingForward = !movingForward;
+            PickNextWayPoint();
         }
-    }
-
-    private void OnCollisionStay(Collision collision)
-    {
-	    if (collision.gameObject.tag == "Bomb")
-	    {
-		    isMoving = false;
-	    }
-    }
-
-    private void OnTriggerStay(Collider other)
-    {
-	    if (other.gameObject.tag == "Bomb")
-	    {
-		    isMoving = false;
-	    }
-    }
-
-    private void OnCollisionExit(Collision collision)
-    {
-	    if (collision.gameObject.tag == "Bomb")
-	    {
-		    isMoving = true;
-	    }
-    }
-    
-    private void OnTriggerExit(Collider other)
-    {
-	    if (other.gameObject.tag == "Bomb")
-	    {
-		    isMoving = true;
-	    }
     }
 
     public void Die()
@@ -169,7 +89,6 @@ public class EnemyController : MonoBehaviour
             GetComponent<Collider>().enabled = false;
             m_Animator.SetBool("isDead", true);
         }
-        
     }
 
     private void IncreaseDestination()
@@ -193,5 +112,37 @@ public class EnemyController : MonoBehaviour
     private void UpdateAnimator()
     {
 	    m_Animator.SetBool("isWalking", isMoving);
+    }
+
+    private void PickNextWayPoint()
+    {
+        isMoving = false;
+        if (movingForward)
+        {
+            if (wayPointDestination >= target.Length - 1)
+            {
+                movingForward = false;
+                Invoke("DecreaseDestination", Random.Range(enemyDelayMin, enemyDelayMax));
+            }
+            // If enemy is moving forward AND has not reached the last waypoint in the array
+            else
+            {
+                Invoke("IncreaseDestination", Random.Range(enemyDelayMin, enemyDelayMax));
+            }
+        }
+        // Enemy is moving backwards
+        else
+        {
+            if (wayPointDestination <= 0)
+            {
+                movingForward = true;
+                Invoke("IncreaseDestination", Random.Range(enemyDelayMin, enemyDelayMax));
+            }
+            // If enemy is moving backward AND has not reached the first waypoint in the array
+            else
+            {
+                Invoke("DecreaseDestination", Random.Range(enemyDelayMin, enemyDelayMax));
+            }
+        }
     }
 }

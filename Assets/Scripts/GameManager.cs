@@ -70,6 +70,14 @@ public class GameManager : MonoBehaviour
         enemiesThisLevel = GetEnemyCount();
     }
 
+    private void Update()
+    {
+	    if (Input.GetButtonDown("Cancel"))
+	    {
+		    PauseButton();
+	    }
+    }
+
     public void PlayerDied()
     {
         if (lives > 1)
